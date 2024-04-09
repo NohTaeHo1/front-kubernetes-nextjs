@@ -2,3 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+.MuiDataGrid-cell{
+    article-right : 1px solid red;
+    article-bottom : 1px solid red;
+}

@@ -3,8 +3,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
 import "./globals.css";
-import { PG } from "../redux/common/enums/PG";
-import AxiosConfig from "@/redux/common/configs/axios-config";
+import { PG } from "./components/common/enums/PG";
+import AxiosConfig from "@/app/components/common/configs/axios-config";
 
 const SERVER = "http://localhost:8020";
 export default function Home() {
@@ -72,11 +72,8 @@ export default function Home() {
           >
             색테스트
           </Link>
-          <Link
-            href={`${PG.DEMO}/counter`}
-            className="text-blue-500 hover:underline"
-          >
-            카운터
+          <Link href={`${PG.BOARD}`} className="text-blue-500 hover:underline">
+            게시판
           </Link>
           <Link
             href={`${PG.DEMO}/redux-counter`}
@@ -95,7 +92,7 @@ export default function Home() {
             href={`${PG.USER}/users/`}
             className="text-blue-500 hover:underline"
           >
-            users
+            가입자 목록
           </Link>
         </div>
       </div>
