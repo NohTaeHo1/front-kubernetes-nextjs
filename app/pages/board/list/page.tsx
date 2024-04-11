@@ -14,16 +14,6 @@ const boardsPage: NextPage = ({ data = [] }: any) => {
   const dispatch = useDispatch();
   const allboards: [] = useSelector(getAllBoards);
 
-  if (allboards !== undefined) {
-    console.log("allboards is not undefined");
-
-    console.log("length is " + allboards.length);
-    for (let i = 0; i < allboards.length; i++) {
-      console.log(JSON.stringify(allboards[i]));
-    }
-  } else {
-    console.log("allboards is undefined");
-  }
 
   useEffect(() => {
     dispatch(findAllBoards(1));

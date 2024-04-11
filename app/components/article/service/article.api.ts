@@ -14,7 +14,7 @@ export const findAllArticlesAPI = async (page: number) => {
 
 export const findArticleByIdAPI = async (id:any)=>{
   try{
-    const response = await instance.get("/articles/detail",{
+    const response = await instance.get("/articles/detail", {
       params:{id}
     });
     return response.data;

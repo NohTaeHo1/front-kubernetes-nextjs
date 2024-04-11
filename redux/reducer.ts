@@ -47,10 +47,7 @@ const boardPersistConfig = {
 };
 
 const persistedCountReducer = persistReducer(countPersistConfig, countReducer);
-const persistedArticleReducer = persistReducer(
-  articlePersistConfig,
-  articleReducer
-);
+const persistedArticleReducer = persistReducer(articlePersistConfig, articleReducer);
 const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
 const persistedBoardReducer = persistReducer(boardPersistConfig, boardReducer);
 

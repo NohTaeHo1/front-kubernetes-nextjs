@@ -1,7 +1,8 @@
-import { Typography } from "@mui/material";
+import { Link, Typography } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { BoardColumn } from "../model/board-columns";
 import { MyTypography } from "../../common/style/cell";
+import { PG } from "../../common/enums/PG";
 
 
 interface CellType{
@@ -25,8 +26,9 @@ export default function BoardColumns(): GridColDef[]{
             sortable: false,
             field: 'boardName',
             headerName: '제목',
-            renderCell: ({row}:CellType) => MyTypography(row.boardName, '1.2rem')
-
+            renderCell: ({row}:CellType) =>  <Typography textAlign="center" sx={{fontSize:"1.5rem"}}>
+                <Link href={`${PG.BOARD}/detail/${row.id}`} className="underline" > {row.boardName} </Link>
+                </Typography>            
         },
         {
             flex: 0.04,

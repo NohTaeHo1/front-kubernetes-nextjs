@@ -8,5 +8,5 @@ export interface IUser {
     email?:string;
     regDate?:string;
     modDate?:string;
-    array?:[];
+    array?:IUser[];
 }
