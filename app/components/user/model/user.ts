@@ -9,4 +9,5 @@ export interface IUser {
     regDate?:string;
     modDate?:string;
     array?:IUser[];
+    message?:string;
 }

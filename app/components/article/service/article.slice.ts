@@ -43,6 +43,7 @@ export const getAllArticles = (state: any) => { //얘가 읽어오는 게터
 export const getArticles = (state: any) => ( //얘가 읽어오는 게터
  state.article.array)
 
+
 export const {} = articleSlice.actions
 
 export default articleSlice.reducer;
