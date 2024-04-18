@@ -2,8 +2,8 @@ export interface IArticle{
     id?: number;
     title?: string;
     content?: string;
-    writer?: number;
-    board?:number;
+    writerId?: number;
+    boardId?:number;
     regDate?:string;
     modDate?:string;
     array?: []

@@ -6,18 +6,20 @@ import "./globals.css";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./components/user/service/user.service";
 import { IUser } from "./components/user/model/user";
-import { getUser } from "./components/user/service/user.slice";
+import { getAuth } from "./components/user/service/user.slice";
 import { useRouter } from "next/navigation";
+import nookies, {parseCookies, setCookie} from 'nookies'
 
 export default function Home() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const message = useSelector(getUser)
+  const auth = useSelector(getAuth)
   const [user, setUser] = useState({} as IUser)
 
   function handleUsername(e: any) {
     setUser({...user, username: e.target.value})
   }
+  
   function handlePassword(e: any) {
     setUser({...user, password: e.target.value})
   }
@@ -28,10 +30,16 @@ export default function Home() {
   }
 
   useEffect(()=>{
-    if(message==="SUCCESS"){
+    if(auth.message ==="SUCCESS"){
+      setCookie({}, 'message', auth.message, { httpOnly: false, path: '/' })
+      setCookie({}, 'token', auth.token, { httpOnly: false, path: '/' } )
+    console.log('서버에서 넘어온 메시지'+parseCookies().message)
+    console.log('서버에서 넘어온 토큰'+parseCookies().token)
       router.push('/pages/board/list')
+    }else{
+      console.log('LOGIN FAIL')
     }
-  })
+  }, [auth])
 
   return (
     <div className="text-center">
@@ -51,7 +59,7 @@ export default function Home() {
             <p className="text-xl text-gray-600 text-center">Welcome back!</p>
             <div className="mt-4">
               <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
-                ID
+                ID : Impala
               </label>
               <input
                 onChange={handleUsername}
@@ -63,7 +71,7 @@ export default function Home() {
             <div className="mt-4 flex flex-col justify-between">
               <div className="flex justify-between">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Password
+                  Password : sC7@J/Py
                 </label>
               </div>
               <input
@@ -131,15 +139,6 @@ export default function Home() {
         </div>
       </div>
       <br />
-      {/* <h3 className='text-red-500'>이름 입력</h3>
-  <Input type="text" onChange={handleChange}/><br />
-  <Button onClick={handleClick}>전 송</Button><br /><br />
-  <Link href={`${PG.USER}/login`}>로그인</Link><br />
-  <Link href={`${PG.USER}/register`}>회원가입</Link><br />
-  <Link href={`${PG.BOARD}/articles`}>게시판</Link><br />
-  <Link href={`${PG.DEMO}/mui-demo`}>MUI 데모</Link><br />
-  <Link href={`${PG.DEMO}/counter`}>React Counter Demo</Link><br />
-  <Link href={`${PG.DEMO}/redux-counter`}>Redux Counter Demo</Link><br /> */}
     </div>
   );
 }

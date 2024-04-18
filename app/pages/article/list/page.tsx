@@ -8,6 +8,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import ArticleColumns from "@/app/components/article/module/columns";
 import { NextPage } from "next";
+import MoveButton from "@/app/atom/button/MoveButton";
+import { PG } from "@/app/components/common/enums/PG";
 
 const ArticleListPage: NextPage = () => {
   const dispatch = useDispatch();
@@ -38,6 +40,7 @@ const ArticleListPage: NextPage = () => {
           />
         )}
       </Box>
+      <MoveButton text={"글쓰기"} path={`${PG.ARTICLE}/save`}/>
     </>
   );
 }

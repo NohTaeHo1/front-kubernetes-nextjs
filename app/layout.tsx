@@ -1,10 +1,10 @@
 'use client'
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import dynamic from "next/dynamic";
 import Header from "./components/common/modeule/header";
-import { useState } from "react";
+import { parseCookies } from "nookies";
+import DashHeader from "./components/common/modeule/dash-header";
 
 const ReduxProvider = dynamic(() => import("@/redux/redux-provider"), {
   ssr: false
@@ -25,12 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const [showHeader, setshowHeader] = useState<boolean>(false);
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        {showHeader && <Header/>}
+        {parseCookies().message === 'SUCCESS' && <Header/>}
         <div className="mt-100">
         <ReduxProvider > {children}</ReduxProvider>
         </div>

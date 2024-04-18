@@ -1,4 +1,5 @@
 import { instance } from "@/app/components/common/configs/axios-config";
+import { IArticle } from "../model/article";
 
 export const findAllArticlesAPI = async (page: number) => {
   try {
@@ -12,13 +13,23 @@ export const findAllArticlesAPI = async (page: number) => {
   }
 }; // 이거 전체가 axios
 
-export const findArticleByIdAPI = async (id:any)=>{
-  try{
-    const response = await instance.get("/articles/detail", {
-      params:{id}
+export const findArticleByIdAPI = async (id: any) => {
+  try {
+    const response = await instance.get("/articles/detail/{id}", {
+      params: { id },
     });
     return response.data;
-  }catch(error){
+  } catch (error) {
     console.log(error);
-    return error;}
-}
+    return error;
+  }
+};
+
+export const saveAPI = async (article: IArticle) => {
+  try {
+    const response = await instance.post("/articles/", article);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};

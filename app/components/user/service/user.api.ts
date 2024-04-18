@@ -48,7 +48,7 @@ export const modifyAPI = async (user:any)=>{
 export const loginAPI = async (user:IUser)=>{
   try{
     const response = await instance.post("/users/login", user)
-    return response.data.message;
+    return response.data;
 
   }catch(error){return error}
 }

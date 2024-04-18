@@ -1,15 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from './article.init';
-import { findAllArticles, findArticleById } from './article.service';
+import { findAllArticles, findArticleById, save } from './article.service';
 
-const articleThunks = [findAllArticles, findArticleById]
+const articleThunks = [findAllArticles, findArticleById, save]
 
 const status = {
     pending: 'pending',
     fulfilled: 'fulfilled',
     rejected: 'rejected'
 }
-
 
 
 const handlePending = (state: any) => {
@@ -31,6 +30,7 @@ export const articleSlice = createSlice({
         builder
         .addCase(findAllArticles.fulfilled, (state: any, {payload}: any) => ({...state, array: payload}))
         .addCase(findArticleById.fulfilled, (state: any, {payload}: any) => ({...state, array: payload}))
+        .addCase(save.fulfilled, (state: any, {payload}: any) => ({...state, array: payload}))
         // switch() case findAllArticles.fulfilled; handleFulfilled; break; 와 같음 (addCase = switchc case)
     }
 })
@@ -42,6 +42,7 @@ export const getAllArticles = (state: any) => { //얘가 읽어오는 게터
 
 export const getArticles = (state: any) => ( //얘가 읽어오는 게터
  state.article.array)
+export const getArticlesById = (state : any)=>(state.article.array)
 
 
 export const {} = articleSlice.actions

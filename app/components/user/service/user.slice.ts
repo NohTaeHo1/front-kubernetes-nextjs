@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { initialState } from "./user.init";
 import { findAllUsers, findUserById, login } from "./user.service";
+import { IUser } from "../model/user";
 
 const userThunks = [findAllUsers, findUserById, login];
 
@@ -10,13 +10,32 @@ const status = {
   rejected: "rejected",
 };
 
+interface IAuth{
+  message?:string,
+  token?:string
+}
+
+interface UserState {
+  array?:Array<IUser>,
+  json?:IUser,
+  auth?:IAuth
+}
+
+export const initialState:UserState = {
+  json: {} as IUser,
+  array:[],
+  auth: {} as IAuth
+}
+
 const handleFulfilled = (state: any, { payload }: any) => {
   console.log("------------------ conclusion ---------------");
   state.array = payload;
   console.log(state.array);
 };
+
 const handlePending = (state: any) => {};
 const handleRejected = (state: any) => {};
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -30,14 +49,14 @@ export const userSlice = createSlice({
         state.array = payload;
       })
       .addCase(login.fulfilled, (state: any, { payload }: any) => {
-        state.message = payload;
+        state.auth = payload;
       });
   },
 });
 
 export const getAllUsers = (state: any) => state.user.array;
-export const getUserById = (state: any) => state.user.array;
-export const getUser = (state: any) => state.user.message;
+export const getUserById = (state: any) => state.user.json;
+export const getAuth = (state: any) => state.user.auth;
 
 export const {} = userSlice.actions;
 
