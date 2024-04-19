@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { findAllUsers, findUserById, login } from "./user.service";
+import { existsUsername, findAllUsers, findUserById, login } from "./user.service";
 import { IUser } from "../model/user";
 
-const userThunks = [findAllUsers, findUserById, login];
+const userThunks = [findAllUsers, findUserById, login, existsUsername];
 
 const status = {
   pending: "pending",
@@ -50,6 +50,9 @@ export const userSlice = createSlice({
       })
       .addCase(login.fulfilled, (state: any, { payload }: any) => {
         state.auth = payload;
+      })
+      .addCase(existsUsername.fulfilled, (state: any, { payload }: any) => {
+        state.boolean = payload;
       });
   },
 });
@@ -57,6 +60,7 @@ export const userSlice = createSlice({
 export const getAllUsers = (state: any) => state.user.array;
 export const getUserById = (state: any) => state.user.json;
 export const getAuth = (state: any) => state.user.auth;
+export const existsByUsername = (state:any) => {return state.user.boolean};
 
 export const {} = userSlice.actions;
 

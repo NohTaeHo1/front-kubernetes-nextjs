@@ -4,42 +4,75 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import "./globals.css";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "./components/user/service/user.service";
+import { existsUsername, login } from "./components/user/service/user.service";
 import { IUser } from "./components/user/model/user";
-import { getAuth } from "./components/user/service/user.slice";
+import {
+  existsByUsername,
+  getAuth,
+} from "./components/user/service/user.slice";
 import { useRouter } from "next/navigation";
-import nookies, {parseCookies, setCookie} from 'nookies'
+import nookies, { parseCookies, setCookie } from "nookies";
+import { jwtDecode } from "jwt-decode";
+import { preconnect } from "react-dom";
 
 export default function Home() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const auth = useSelector(getAuth)
-  const [user, setUser] = useState({} as IUser)
+  const auth = useSelector(getAuth);
+  const [user, setUser] = useState({} as IUser);
+  const [isWrongId, setIsWrongId] = useState(false); // is붙이면 boolean타입 쓴다는 표식
+  const [isWrongPW, setIsWrongPW] = useState(false);
+  const [isNotExist, setIsNotExist] = useState(true);
+  const [isTrueId, setisTrueId] = useState(false)
+
+  const existUser: boolean = useSelector(existsByUsername);
 
   function handleUsername(e: any) {
-    setUser({...user, username: e.target.value})
+    const ID_CHECK = /^[A-Z]+[a-zA-Z]{5,19}$/g;
+
+    if (e.target.value.length === 0) {
+      setIsWrongId(false);
+      setisTrueId(false)
+    }else if (ID_CHECK.test(e.target.value)) {
+      setIsWrongId(false);
+      setisTrueId(true)
+    } else {
+      setIsWrongId(true);
+      setisTrueId(false)
+    }
   }
-  
+
   function handlePassword(e: any) {
-    setUser({...user, password: e.target.value})
+    const PW_CHECK = /^[a-z](?=.*[!@#$%^&*])(?=.*[A-Z]).{3,10}$/g;
+    if (PW_CHECK.test(e.target.value)) {
+    } else {
+    }
+    setUser({ ...user, password: e.target.value });
   }
 
   function handleSubmit() {
-    console.log('user...'+JSON.stringify(user))
-    dispatch(login(user));
+
+    console.log("서버 보내기 직전 user정보 : " + JSON.stringify(user));
+    dispatch(existsUsername(user.username));
+    setIsNotExist(true);
+    setIsWrongId(false);
+    setisTrueId(false)
   }
 
-  useEffect(()=>{
-    if(auth.message ==="SUCCESS"){
-      setCookie({}, 'message', auth.message, { httpOnly: false, path: '/' })
-      setCookie({}, 'token', auth.token, { httpOnly: false, path: '/' } )
-    console.log('서버에서 넘어온 메시지'+parseCookies().message)
-    console.log('서버에서 넘어온 토큰'+parseCookies().token)
-      router.push('/pages/board/list')
-    }else{
-      console.log('LOGIN FAIL')
+  useEffect(() => {
+    if (auth.message === "SUCCESS") {
+      setCookie({}, "message", auth.message, { httpOnly: false, path: "/" });
+      setCookie({}, "token", auth.token, { httpOnly: false, path: "/" });
+      console.log("서버에서 넘어온 메시지" + parseCookies().message);
+      console.log("서버에서 넘어온 토큰" + parseCookies().token);
+      console.log("토큰을 디코드한 내용 : ");
+      console.log(jwtDecode<any>(parseCookies().token));
+
+      router.push("/pages/board/list");
+    } else {
+      console.log("LOGIN FAIL");
     }
-  }, [auth])
+  }, [auth]);
 
   return (
     <div className="text-center">
@@ -68,6 +101,21 @@ export default function Home() {
                 required
               />
             </div>
+            {isWrongId && (
+              <pre>
+                <h6 className="text-red-600"> 사용할 수 없는 ID </h6>
+              </pre>
+            )}
+            {isTrueId && (
+              <pre>
+                <h6 className="text-blue-600"> 양식에 맞는 ID </h6>
+              </pre>
+            )}
+            {!isNotExist && (
+              <pre>
+                <h6 className="text-red-600"> 존재하지 않는 ID </h6>
+              </pre>
+            )}
             <div className="mt-4 flex flex-col justify-between">
               <div className="flex justify-between">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -86,6 +134,11 @@ export default function Home() {
                 Forget Password?
               </a>
             </div>
+            {isWrongPW && (
+              <pre>
+                <h6 className="text-red-600"> 사용할 수 없는 PassWord </h6>
+              </pre>
+            )}
             <div className="mt-8">
               <button
                 onClick={handleSubmit}

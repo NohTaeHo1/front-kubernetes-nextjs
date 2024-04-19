@@ -27,7 +27,7 @@ export const findArticleByIdAPI = async (id: any) => {
 
 export const saveAPI = async (article: IArticle) => {
   try {
-    const response = await instance.post("/articles/", article);
+    const response = await instance.post("/articles/save", article);
     return response.data;
   } catch (error) {
     return error;

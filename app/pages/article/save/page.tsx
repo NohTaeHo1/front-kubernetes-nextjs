@@ -9,13 +9,9 @@ import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import { PG } from "@/app/components/common/enums/PG";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { IUser } from "@/app/components/user/model/user";
-import { useSelector } from "react-redux";
-import { IBoard } from "@/app/components/board/model/board";
 import { save } from "@/app/components/article/service/article.service";
 import { useRouter } from "next/navigation";
 import { IArticle } from "@/app/components/article/model/article";
-import { initialState } from "@/app/components/article/service/article.init";
 
 const WritePage: NextPage = () => {
   const router = useRouter();
@@ -25,8 +21,7 @@ const WritePage: NextPage = () => {
   
 
   const handleInsertTitle = (e: any) => {
-    setArticle({...article, title: e.target.value})
-    setArticle({...article, id: 0})
+    setArticle({...article, title: e.target.value, boardId: 1})
   };
 
   const handleInsertContent = (e: any) => {
@@ -49,11 +44,14 @@ const WritePage: NextPage = () => {
   };
 
   function handleSubmit() {
-    
     dispatch(save(article));
     alert("글쓰기 성공")
+    console.log(JSON.stringify(article))
     console.log(article)
+    router.push(`${PG.ARTICLE}/list`);
   }
+  
+  useEffect(()=>{})
 
 
   return (
