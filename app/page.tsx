@@ -22,7 +22,7 @@ export default function Home() {
   const [user, setUser] = useState({} as IUser);
   const [isWrongId, setIsWrongId] = useState(false); // is붙이면 boolean타입 쓴다는 표식
   const [isWrongPW, setIsWrongPW] = useState(false);
-  const [isNotExist, setIsNotExist] = useState(true);
+  const [isNotExist, setIsNotExist] = useState(false);
   const [isTrueId, setisTrueId] = useState(false)
 
   const existUser: boolean = useSelector(existsByUsername);
@@ -36,28 +36,36 @@ export default function Home() {
     }else if (ID_CHECK.test(e.target.value)) {
       setIsWrongId(false);
       setisTrueId(true)
+      setUser({ ...user, username: e.target.value });
+      console.log("Username :"+e.target.value)
     } else {
       setIsWrongId(true);
       setisTrueId(false)
     }
   }
 
+
   function handlePassword(e: any) {
     const PW_CHECK = /^[a-z](?=.*[!@#$%^&*])(?=.*[A-Z]).{3,10}$/g;
     if (PW_CHECK.test(e.target.value)) {
+      setUser({ ...user, password: e.target.value });
     } else {
+      
     }
-    setUser({ ...user, password: e.target.value });
   }
+
 
   function handleSubmit() {
 
     console.log("서버 보내기 직전 user정보 : " + JSON.stringify(user));
+    console.log(existUser)
     dispatch(existsUsername(user.username));
-    setIsNotExist(true);
+    setIsNotExist(existUser);
     setIsWrongId(false);
-    setisTrueId(false)
+    setisTrueId(false);
+    dispatch(login(user))
   }
+
 
   useEffect(() => {
     if (auth.message === "SUCCESS") {
@@ -68,7 +76,7 @@ export default function Home() {
       console.log("토큰을 디코드한 내용 : ");
       console.log(jwtDecode<any>(parseCookies().token));
 
-      router.push("/pages/board/list");
+      // router.push("/pages/board/list");
     } else {
       console.log("LOGIN FAIL");
     }
@@ -111,7 +119,7 @@ export default function Home() {
                 <h6 className="text-blue-600"> 양식에 맞는 ID </h6>
               </pre>
             )}
-            {!isNotExist && (
+            {isNotExist && (
               <pre>
                 <h6 className="text-red-600"> 존재하지 않는 ID </h6>
               </pre>

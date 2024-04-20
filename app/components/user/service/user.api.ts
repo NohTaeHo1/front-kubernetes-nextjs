@@ -56,7 +56,8 @@ export const loginAPI = async (user:IUser)=>{
 export const existsUsernameAPI = async (username:string)=>{
   try{
     const response = await instance.get("/users/exist-username", {params:{username}})
+    console.log('aaaaaaaaaaaaaaaaa'+response.data)
     return response.data;
-
+    
   }catch(error){return error}
 }

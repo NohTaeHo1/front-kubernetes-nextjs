@@ -35,5 +35,7 @@ export const login: any = createAsyncThunk(
 
 export const existsUsername: any = createAsyncThunk(
     'users/existsUsername',
-    async (username:string) => await existsUsernameAPI(username)
+    async (username:string) => {
+        console.log("thunk에서 보낼 username : "+username)
+        await existsUsernameAPI(username)}
 )

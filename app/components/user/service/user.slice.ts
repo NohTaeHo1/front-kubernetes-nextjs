@@ -18,13 +18,14 @@ interface IAuth{
 interface UserState {
   array?:Array<IUser>,
   json?:IUser,
-  auth?:IAuth
+  auth?:IAuth,
+  boolean?:boolean
 }
 
 export const initialState:UserState = {
   json: {} as IUser,
   array:[],
-  auth: {} as IAuth
+  auth: {} as IAuth,
 }
 
 const handleFulfilled = (state: any, { payload }: any) => {
@@ -51,8 +52,10 @@ export const userSlice = createSlice({
       .addCase(login.fulfilled, (state: any, { payload }: any) => {
         state.auth = payload;
       })
-      .addCase(existsUsername.fulfilled, (state: any, { payload }: any) => {
+      .addCase(existsUsername.fulfilled, (state: any,  {payload} : any) => {
         state.boolean = payload;
+        console.log('dsaflkh'+payload)
+        console.log('ldskfh'+state.boolean)
       });
   },
 });
@@ -60,7 +63,9 @@ export const userSlice = createSlice({
 export const getAllUsers = (state: any) => state.user.array;
 export const getUserById = (state: any) => state.user.json;
 export const getAuth = (state: any) => state.user.auth;
-export const existsByUsername = (state:any) => {return state.user.boolean};
+export const existsByUsername = (state:any) => {
+  console.log("state "+state.user.boolean)
+  return state.user};
 
 export const {} = userSlice.actions;
 
