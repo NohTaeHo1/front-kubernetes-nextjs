@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import "./globals.css";
 import { useDispatch, useSelector } from "react-redux";
 import { existsUsername, login } from "./components/user/service/user.service";
-import { IUser } from "./components/user/model/user";
 import {
   existsByUsername,
   getAuth,
@@ -13,74 +12,123 @@ import {
 import { useRouter } from "next/navigation";
 import nookies, { parseCookies, setCookie } from "nookies";
 import { jwtDecode } from "jwt-decode";
-import { preconnect } from "react-dom";
+import { IUser } from "./components/user/model/user";
 
 export default function Home() {
   const dispatch = useDispatch();
   const router = useRouter();
   const auth = useSelector(getAuth);
   const [user, setUser] = useState({} as IUser);
+  const [isTrueId, setisTrueId] = useState(false);
   const [isWrongId, setIsWrongId] = useState(false); // is붙이면 boolean타입 쓴다는 표식
+  const [isTruePW, setisTruePW] = useState(false);
   const [isWrongPW, setIsWrongPW] = useState(false);
   const [isNotExist, setIsNotExist] = useState(false);
-  const [isTrueId, setisTrueId] = useState(false)
+  const formRef = useRef<HTMLInputElement>(null);
 
   const existUser: boolean = useSelector(existsByUsername);
 
   function handleUsername(e: any) {
-    const ID_CHECK = /^[A-Z]+[a-zA-Z]{5,19}$/g;
+    const ID_CHECK = /^[A-Z]+[a-zA-Z]{5,12}$/g;
+    //if(isTrueId===true){setIsNotExist(false)}
 
     if (e.target.value.length === 0) {
       setIsWrongId(false);
-      setisTrueId(false)
-    }else if (ID_CHECK.test(e.target.value)) {
+      setisTrueId(false);
+    } else if (ID_CHECK.test(e.target.value)) {
       setIsWrongId(false);
-      setisTrueId(true)
+      setisTrueId(true);
+      setIsNotExist(false);
       setUser({ ...user, username: e.target.value });
-      console.log("Username :"+e.target.value)
     } else {
       setIsWrongId(true);
-      setisTrueId(false)
+      setisTrueId(false);
     }
   }
-
 
   function handlePassword(e: any) {
-    const PW_CHECK = /^[a-z](?=.*[!@#$%^&*])(?=.*[A-Z]).{3,10}$/g;
-    if (PW_CHECK.test(e.target.value)) {
+    const PW_CHECK = /^[a-z](?=.*[!@#$%^&*])(?=.*[A-Z]).{3,12}$/g;
+
+    if (e.target.value.length === 0) {
+      setIsWrongPW(false);
+      setisTruePW(false);
+    } else if (PW_CHECK.test(e.target.value)) {
+      setIsWrongPW(false);
+      setisTruePW(true);
       setUser({ ...user, password: e.target.value });
     } else {
-      
+      setIsWrongPW(true);
+      setisTruePW(false);
     }
   }
-
 
   function handleSubmit() {
+    dispatch(existsUsername(user.username))
+      .then((res: any) => {
+        console.log('message : '+res.payload)
+        if (res.payload == true) {
+          dispatch(login(user))
+            .then((resp: any) => {
+              console.log('서버에서 넘어온 RES ' + JSON.stringify(resp))
+              console.log('서버에서 넘어온 메시지 1 ' + resp.payload.message)
+              console.log('서버에서 넘어온 토큰 1 ' + resp.payload.accessToken)
+              setCookie({}, "message", resp.payload.message, {
+                httpOnly: false,
+                path: "/",
+              });
+              setCookie({}, "accessToken", resp.payload.accessToken, {
+                httpOnly: false,
+                path: "/",
+              });
+              console.log('서버에서 넘어온 메시지 2 ' + parseCookies().message)
+              console.log('서버에서 넘어온 토큰 2 ' + parseCookies().accessToken)
+              console.log('토큰을 디코드한 내용 : ')
+              console.log(jwtDecode<any>(parseCookies().accessToken))
 
-    console.log("서버 보내기 직전 user정보 : " + JSON.stringify(user));
-    console.log(existUser)
-    dispatch(existsUsername(user.username));
-    setIsNotExist(existUser);
-    setIsWrongId(false);
-    setisTrueId(false);
-    dispatch(login(user))
+              router.push("/pages/board/list");
+            })
+            .catch((err: any) => {
+              console.log("로그인 실패");
+            });
+        } else {
+          console.log("아이디가 존재하지 않습니다.");
+          setIsNotExist(true)
+          setIsWrongId(false);
+          setisTrueId(false);
+          setIsWrongPW(false);
+          setisTruePW(false);
+        }
+      })
+      .catch((err: any) => {})
+      .finally(() => {
+        console.log("최종적으로 반드시 이뤄져야 할 로직");
+
+        if (formRef.current) {
+          formRef.current.value = "";
+        }
+      });
   }
 
+  // useEffect(() => {
+  //   if (auth.message === "SUCCESS") {
+  //     setCookie({}, "message", auth.message, { httpOnly: false, path: "/" });
+  //     setCookie({}, "token", auth.token, { httpOnly: false, path: "/" });
+  //     console.log("서버에서 넘어온 메시지" + parseCookies().message);
+  //     console.log("서버에서 넘어온 토큰" + parseCookies().token);
+  //     console.log("토큰을 디코드한 내용 : ");
+  //     console.log(jwtDecode<any>(parseCookies().token));
 
-  useEffect(() => {
-    if (auth.message === "SUCCESS") {
-      setCookie({}, "message", auth.message, { httpOnly: false, path: "/" });
-      setCookie({}, "token", auth.token, { httpOnly: false, path: "/" });
-      console.log("서버에서 넘어온 메시지" + parseCookies().message);
-      console.log("서버에서 넘어온 토큰" + parseCookies().token);
-      console.log("토큰을 디코드한 내용 : ");
-      console.log(jwtDecode<any>(parseCookies().token));
+  //     router.push("/pages/board/list");
+  //   } else {
+  //     console.log("LOGIN FAIL");
+  //   }
+  // }, [auth]);
 
-      // router.push("/pages/board/list");
-    } else {
-      console.log("LOGIN FAIL");
-    }
-  }, [auth]);
+  // useEffect(() => {
+  //   if (existUser) {
+  //     setIsNotExist(false);
+  //   }else{setIsNotExist(true);}
+  // }, [existUser]);
 
   return (
     <div className="text-center">
@@ -93,7 +141,7 @@ export default function Home() {
           <div
             className="hidden md:block lg:w-1/2 bg-cover bg-blue-700"
             style={{
-              backgroundImage: `url(https://www.tailwindtap.com//assets/components/form/userlogin/login_tailwindtap.jpg)`,
+              backgroundImage:  "url('/user/img/cat.png')",
             }}
           ></div>
           <div className="w-full p-8 lg:w-1/2">
@@ -144,7 +192,12 @@ export default function Home() {
             </div>
             {isWrongPW && (
               <pre>
-                <h6 className="text-red-600"> 사용할 수 없는 PassWord </h6>
+                <h6 className="text-red-600"> 사용할 수 없는 Password </h6>
+              </pre>
+            )}
+            {isTruePW && (
+              <pre>
+                <h6 className="text-blue-600"> 사용할 수 있는 Password </h6>
               </pre>
             )}
             <div className="mt-8">

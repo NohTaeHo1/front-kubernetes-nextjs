@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { existsUsername, findAllUsers, findUserById, login } from "./user.service";
-import { IUser } from "../model/user";
+import {IUser} from "../model/user";
 
 const userThunks = [findAllUsers, findUserById, login, existsUsername];
 
@@ -54,8 +54,6 @@ export const userSlice = createSlice({
       })
       .addCase(existsUsername.fulfilled, (state: any,  {payload} : any) => {
         state.boolean = payload;
-        console.log('dsaflkh'+payload)
-        console.log('ldskfh'+state.boolean)
       });
   },
 });
@@ -64,8 +62,7 @@ export const getAllUsers = (state: any) => state.user.array;
 export const getUserById = (state: any) => state.user.json;
 export const getAuth = (state: any) => state.user.auth;
 export const existsByUsername = (state:any) => {
-  console.log("state "+state.user.boolean)
-  return state.user};
+  return state.user.boolean};
 
 export const {} = userSlice.actions;
 

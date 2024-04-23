@@ -1,6 +1,5 @@
-import { instance } from "@/app/components/common/configs/axios-config";
-import { error } from "console";
-import { IUser } from "../model/user";
+import instance from "../../common/configs/axios-config";
+import {IUser} from "../model/user";
 
 export const findAllUsersAPI = async (page: any) => {
   try {
@@ -56,7 +55,15 @@ export const loginAPI = async (user:IUser)=>{
 export const existsUsernameAPI = async (username:string)=>{
   try{
     const response = await instance.get("/users/exist-username", {params:{username}})
-    console.log('aaaaaaaaaaaaaaaaa'+response.data)
+    return response.data;
+    
+  }catch(error){return error}
+}
+
+export const logoutAPI = async ()=>{
+  try{
+    const response = await instance.get("/users/logout", {params: {}})
+    console.log('로그아웃 결과 : '+response.data)
     return response.data;
     
   }catch(error){return error}

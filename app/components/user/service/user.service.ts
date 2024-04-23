@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { deleteByIdAPI, existsUsernameAPI, findAllUsersAPI, findUserByIdAPI, loginAPI, modifyAPI } from "./user.api";
+import { deleteByIdAPI, existsUsernameAPI, findAllUsersAPI, findUserByIdAPI, loginAPI, logoutAPI, modifyAPI } from "./user.api";
 import exp from "constants";
-import { IUser } from "../model/user";
+import {IUser} from "../model/user";
 
 export const findAllUsers: any = createAsyncThunk(
     'users/findAllUsersAPI',
@@ -31,11 +31,15 @@ export const modify: any = createAsyncThunk(
 export const login: any = createAsyncThunk(
     'users/login',
     async (user:IUser) => await loginAPI(user)
+
 )
 
 export const existsUsername: any = createAsyncThunk(
-    'users/existsUsername',
-    async (username:string) => {
-        console.log("thunk에서 보낼 username : "+username)
-        await existsUsernameAPI(username)}
+    'users/exist-Username',
+    async (username:string) => await existsUsernameAPI(username)
+)
+
+export const logout: any = createAsyncThunk(
+    'users/logout',
+    async () => await logoutAPI()
 )
