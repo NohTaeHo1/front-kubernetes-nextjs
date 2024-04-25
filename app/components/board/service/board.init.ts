@@ -6,4 +6,5 @@ export const initialState: IBoard = {
   description: "",
   regDate: "",
   modDate: "",
+  content: ""
 };

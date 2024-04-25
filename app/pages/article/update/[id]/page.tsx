@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 import { jwtDecode } from "jwt-decode";
 import { parseCookies } from "nookies";
 
-const WritePage: NextPage = () => {
+const UpdateArticlePage: NextPage = ({id: any}) => {
   const {
     register,
     handleSubmit,
@@ -150,4 +150,4 @@ const WritePage: NextPage = () => {
   );
 };
 
-export default WritePage;
+export default UpdateArticlePage;

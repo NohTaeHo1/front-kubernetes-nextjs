@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { parseCookies } from "nookies";
 
 // export default function AxiosConfig() {
@@ -12,30 +12,27 @@ import { parseCookies } from "nookies";
 //   }
 // }
 
-const instance = axios.create({baseURL:process.env.NEXT_PUBLIC_API_URL})
+export default function instance() {
+  const instance = axios.create({baseURL: process.env.NEXT_PUBLIC_API_URL})
+  setInterceptor(instance)
+  return instance
+}
 
-instance.interceptors.request.use(
-  (request)=>{
-    const accessToken = parseCookies().accessToken;
-    console.log('Token in parseCookies of AXIOS interceptors')
-
-    request.headers['Content-Type'] = "application/json"
-    request.headers['Authorization'] = `Bearer ${accessToken}`
-    return request
-  },
-  (error)=>{
-    console.log('AXIOS interceptors error(request) : '+error)
-    return Promise.reject(error)
-  }
-)
-
-instance.interceptors.response.use(
-  (response)=>{
-    if(response.status === 404){
-      console.log('AXIOS interceptors error(no token)')
-    }
-    return response
-  }
-)
-
-export default instance
+export const setInterceptor = (inputInstance:AxiosInstance) => {
+  inputInstance.interceptors.request.use(
+  (config) => {
+      config.headers["Content-Type"] = "application/json"
+      config.headers["Authorization"] = `Bearer ${parseCookies().accessToken}`
+      return config
+  }, (error) => {
+      console.log("AXIOS INTERSEPTOR ERROR OCCURRED : " + error)
+      return Promise.reject(error)
+  })
+  inputInstance.interceptors.response.use(
+      (response) => {
+          if(response.status === 404) console.log("AXIOS INTERSEPTOR CATCHES 404")
+          return response
+      }
+  )
+  return inputInstance
+}

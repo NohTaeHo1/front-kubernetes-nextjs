@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { findAllBoardsAPI, findBoardByIdAPI } from "./board.api";
+import { findAllBoardsAPI, findBoardByIdAPI, getBoardListAPI } from "./board.api";
 
 export const findAllBoards: any = createAsyncThunk(
     'boards/findAllBoards',
@@ -18,4 +18,5 @@ export const findBoardById: any = createAsyncThunk(
         const {message, result}:any = data
         return data;
     });
+
 

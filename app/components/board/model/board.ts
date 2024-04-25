@@ -4,4 +4,5 @@ export interface IBoard {
     description?:string;
     regDate?:string;
     modDate?:string;
+    content?:string;
 }

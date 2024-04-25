@@ -26,6 +26,7 @@ export const save: any = createAsyncThunk(
   "articles/save",
   async (article: IArticle) => {
     const data: any = await saveAPI(article);
+    
     return data;
   }
 );

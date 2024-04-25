@@ -157,6 +157,9 @@ export default function UserDetail({ params }: any) {
           <button onClick={modifyHandle} style={{ ...buttonStyle, backgroundColor: "#4CAF50" }}>
             수정
           </button>
+          <button  style={{ ...buttonStyle, backgroundColor: "#f44336" }}>
+            탈퇴
+          </button>
         </div>
       </>
     )}

@@ -1,9 +1,9 @@
-import { instance } from "@/app/components/common/configs/axios-config";
+import  instance  from "@/app/components/common/configs/axios-config";
 import { IArticle } from "../model/article";
 
 export const findAllArticlesAPI = async (page: number) => {
   try {
-    const response = await instance.get("/articles/list", {
+    const response = await instance().get("/articles/list", {
       params: { page, limit: 10 },
     });
     return response.data;
@@ -15,7 +15,7 @@ export const findAllArticlesAPI = async (page: number) => {
 
 export const findArticleByIdAPI = async (id: any) => {
   try {
-    const response = await instance.get("/articles/detail/{id}", {
+    const response = await instance().get("/articles/detail/{id}", {
       params: { id },
     });
     return response.data;
@@ -27,7 +27,8 @@ export const findArticleByIdAPI = async (id: any) => {
 
 export const saveAPI = async (article: IArticle) => {
   try {
-    const response = await instance.post("/articles/save", article);
+    const response = await instance().post("/articles/save", article);
+    console.log("response.data : "+response.data)
     return response.data;
   } catch (error) {
     return error;

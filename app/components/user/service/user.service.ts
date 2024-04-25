@@ -43,3 +43,4 @@ export const logout: any = createAsyncThunk(
     'users/logout',
     async () => await logoutAPI()
 )
+

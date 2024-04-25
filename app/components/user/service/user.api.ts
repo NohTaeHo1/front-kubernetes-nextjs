@@ -3,7 +3,7 @@ import {IUser} from "../model/user";
 
 export const findAllUsersAPI = async (page: any) => {
   try {
-    const response = await instance.get("/users/list", {
+    const response = await instance().get("/users/list", {
       params: { page, limit: 10 },
     });
     return response.data;
@@ -15,7 +15,7 @@ export const findAllUsersAPI = async (page: any) => {
 
 export const findUserByIdAPI = async (id: any) => {
   try {
-    const response = await instance.get("/users/detail", {
+    const response = await instance().get("/users/detail", {
       params: { id },
     });
     return response.data;
@@ -27,7 +27,7 @@ export const findUserByIdAPI = async (id: any) => {
 
 export const deleteByIdAPI = async (id:any)=>{
   try{
-    const response = await instance.delete("/users/delete", {
+    const response = await instance().delete("/users/delete", {
       params:{id}
     })
     return response.data;
@@ -36,7 +36,7 @@ export const deleteByIdAPI = async (id:any)=>{
 
 export const modifyAPI = async (user:any)=>{
   try{
-    const response = await instance.put("/users/modify", {
+    const response = await instance().put("/users/modify", {
       params:{user}
     })
     return response.data;
@@ -46,7 +46,7 @@ export const modifyAPI = async (user:any)=>{
 
 export const loginAPI = async (user:IUser)=>{
   try{
-    const response = await instance.post("/users/login", user)
+    const response = await instance().post("/auth/login", user)
     return response.data;
 
   }catch(error){return error}
@@ -54,7 +54,7 @@ export const loginAPI = async (user:IUser)=>{
 
 export const existsUsernameAPI = async (username:string)=>{
   try{
-    const response = await instance.get("/users/exist-username", {params:{username}})
+    const response = await instance().get("/auth/exist-username", {params:{username}})
     return response.data;
     
   }catch(error){return error}
@@ -62,9 +62,12 @@ export const existsUsernameAPI = async (username:string)=>{
 
 export const logoutAPI = async ()=>{
   try{
-    const response = await instance.get("/users/logout", {params: {}})
-    console.log('로그아웃 결과 : '+response.data)
+    const response = await instance().get("/users/logout")
+    console.log('로그아웃 API 결과 : '+response.data)
     return response.data;
     
-  }catch(error){return error}
+  }catch(error){
+    console.log('로그아웃 error')
+
+    return error}
 }
