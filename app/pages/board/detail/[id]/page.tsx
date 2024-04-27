@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { findAllArticles, findArticleById } from "@/app/components/article/service/article.service";
+import { findAArticleById, findAllArticles, findArticlesByBoardId, } from "@/app/components/article/service/article.service";
 import { getAllArticles, getArticlesById } from "@/app/components/article/service/article.slice";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
@@ -21,7 +21,7 @@ const ArticleDetail: NextPage = ({ params }: any) => {
 
   useEffect(() => {
     console.log("토큰 해제"+params.id)
-    dispatch(findArticleById(params.id));
+    dispatch(findArticlesByBoardId(params.id));
   }, []);
 
   return (

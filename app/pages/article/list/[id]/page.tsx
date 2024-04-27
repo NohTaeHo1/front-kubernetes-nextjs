@@ -17,9 +17,10 @@ const ArticleDetail: NextPage = (props:any) => {
   const dispatch = useDispatch();
 
   const eachArticles: [] = useSelector(getArticlesById);
-  console.log([eachArticles])
+  console.log("Articles : "+JSON.stringify(eachArticles))
 
   useEffect(() => {
+    console.log("디스패치에 들어갈 boardId : "+props.params.id)
     dispatch(findArticlesByBoardId(props.params.id));
   }, []);
 
@@ -58,12 +59,6 @@ const ArticleDetail: NextPage = (props:any) => {
               )}
             </td>
           </tr>
-          <td>
-            <button>수정</button>
-          </td>
-          <td>
-            <button>삭제</button>
-          </td>
           <thead>
             <tr>
               <td colSpan={3}>

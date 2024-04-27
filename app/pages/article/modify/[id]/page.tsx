@@ -65,12 +65,12 @@ const WritePage: NextPage = (props: any) => {
       .then((res: any) => {
         alert("글쓰기 성공");
         //console.log("res.payload.boardId"+JSON.stringify(res));
-        router.push(`/pages/board/detail/${data.boardId}`);
+        router.push(`/pages/article/list/${data.boardId}`);
       })
       .catch((err: any) => {
         console.log(err);
         alert("error");
-        router.push(`/pages/board/detail/${data.boardId}`);
+        router.push(`/pages/article/list/${data.boardId}`);
       });
   };
 
@@ -104,19 +104,19 @@ const WritePage: NextPage = (props: any) => {
             readOnly
             {...register("writerId", { required: true })}
           />
-          <input
+          {AArticle && <input
             className="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none"
             placeholder="Title"
             type="text"
-            //defaultValue={AArticle.title}
+            defaultValue={AArticle.title}
             {...register("title", { required: true })}
-          />
-          <textarea
+          />}
+          {AArticle&&<textarea
             className="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none"
             placeholder="Describe everything about this post here"
-            defaultValue={props.params}
+            defaultValue={AArticle.content}
             {...register("content", { required: true, maxLength: 300 })}
-          ></textarea>
+          ></textarea>}
           {/* <!-- icons --> */}
           <div className="icons flex text-gray-500 m-2">
             <svg
@@ -160,11 +160,11 @@ const WritePage: NextPage = (props: any) => {
             >
               Cancel
             </div>
-            <input
+            {AArticle&&<input
               type="hidden"
-              value={props.params.id}
+              value={AArticle.id}
               {...register("id", { required: true })}
-            />
+            />}
           </div>
         </div>
       </form>
