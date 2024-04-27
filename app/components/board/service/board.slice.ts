@@ -22,7 +22,6 @@ const status = {
 
 const handleFulfilled = (state:any, {payload}:any)=>{
     return {...state, array: payload};
-
 }
 
 const handlePending = (state: any) => {
@@ -50,7 +49,7 @@ export const boardSlice = createSlice({
 })
 
 export const getAllBoards = (state:any)=>{return state.board.array;}
-export const getSingleBoard = (state:any)=>(state.board.JSON)
+export const getSingleBoard = (state:any)=>(state.board.json)
 
 export const {} = boardSlice.actions
 

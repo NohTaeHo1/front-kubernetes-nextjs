@@ -2,24 +2,25 @@
 
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { findAllArticles, findArticlesByBoardId } from "@/app/components/article/service/article.service";
-import { getAllArticles } from "@/app/components/article/service/article.slice";
+import { findAllArticles, findArticlesByBoardId,  } from "@/app/components/article/service/article.service";
+import { getAllArticles, getArticlesById } from "@/app/components/article/service/article.slice";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import ArticleColumns from "@/app/components/article/module/columns";
 import { NextPage } from "next";
 import MoveButton from "@/app/atom/button/MoveButton";
 import { PG } from "@/app/components/common/enums/PG";
+import { jwtDecode } from "jwt-decode";
+import { parseCookies } from "nookies";
 
-const ArticleListPage: NextPage = () => {
-
+const ArticleDetail: NextPage = (props:any) => {
   const dispatch = useDispatch();
 
-  const allArticles: [] = useSelector(getAllArticles);
+  const eachArticles: [] = useSelector(getArticlesById);
+  console.log([eachArticles])
 
   useEffect(() => {
-
-    dispatch(findAllArticles());
+    dispatch(findArticlesByBoardId(props.params.id));
   }, []);
 
   return (
@@ -39,9 +40,9 @@ const ArticleListPage: NextPage = () => {
           </tr>
           <tr>
             <td align="center" className="h-300">
-              {allArticles && (
+              {eachArticles && (
                 <DataGrid
-                  rows={allArticles}
+                  rows={eachArticles}
                   columns={ArticleColumns()}
                   initialState={{
                     pagination: {
@@ -76,4 +77,4 @@ const ArticleListPage: NextPage = () => {
   );
 };
 
-export default ArticleListPage;
+export default ArticleDetail;

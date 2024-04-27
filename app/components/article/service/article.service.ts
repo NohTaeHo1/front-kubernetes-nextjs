@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { findAllArticlesAPI, findArticleByIdAPI, saveAPI } from "./article.api";
+import { deleteArticleAPI, findAArticleByIdAPI, findAllArticlesAPI, findArticlesByBoardIdAPI, saveAPI } from "./article.api";
 import { IArticle } from "../model/article";
 
 export const findAllArticles: any = createAsyncThunk(
@@ -13,10 +13,11 @@ export const findAllArticles: any = createAsyncThunk(
   }
 );
 
-export const findArticleById: any = createAsyncThunk(
-  "articles/datail/id",
+export const findArticlesByBoardId: any = createAsyncThunk(
+  "articles/list/id",
   async (id: any) => {
-    const data: any = await findArticleByIdAPI(id);
+    console.log("findArticleById id : " + id);
+    const data: any = await findArticlesByBoardIdAPI(id);
     const { message, result }: any = data;
     return data;
   }
@@ -25,8 +26,25 @@ export const findArticleById: any = createAsyncThunk(
 export const save: any = createAsyncThunk(
   "articles/save",
   async (article: IArticle) => {
+    console.log("articleThunk : "+JSON.stringify(article))
     const data: any = await saveAPI(article);
+    console.log("data : "+data)
     
     return data;
   }
 );
+
+export const deleteArticle: any = createAsyncThunk(
+  'articles/deleteById',
+  async (id: number)=> {
+    const data: any = await deleteArticleAPI(id)
+  return data})
+
+  export const findAArticleById: any = createAsyncThunk(
+    "articles/detail/id",
+    async (id: any) => {
+      const data: any = await findAArticleByIdAPI(id);
+      const { message, result }: any = data;
+      return data;
+    }
+  );

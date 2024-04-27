@@ -7,7 +7,7 @@ import { Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function UserDetailPage(props: any) {
+export default function articleDetailPage(props: any) {
   const dispatch = useDispatch();
 
   const allArticles:IArticle = useSelector(getArticles);

@@ -9,7 +9,10 @@ import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import { PG } from "@/app/components/common/enums/PG";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { save } from "@/app/components/article/service/article.service";
+import {
+  findAArticleById,
+  save,
+} from "@/app/components/article/service/article.service";
 import { useRouter } from "next/navigation";
 import { IArticle } from "@/app/components/article/model/article";
 import { getAllBoards } from "@/app/components/board/service/board.slice";
@@ -18,8 +21,15 @@ import { IBoard } from "@/app/components/board/model/board";
 import { useForm } from "react-hook-form";
 import { jwtDecode } from "jwt-decode";
 import { parseCookies } from "nookies";
+import {
+  getArticlesById,
+  getAArticleDetail,
+} from "@/app/components/article/service/article.slice";
+import { IUser } from "@/app/components/user/model/user";
 
-const WritePage: NextPage = () => {
+const WritePage: NextPage = (props: any) => {
+  console.log("prop 받기 : " + props.params.id);
+
   const {
     register,
     handleSubmit,
@@ -30,30 +40,37 @@ const WritePage: NextPage = () => {
   const dispatch = useDispatch();
 
   const handelCancel = () => {
-    router.push(`${PG.ARTICLE}/list`);
+    router.push(`${PG.BOARD}/detail/${props.params.id}`);
   };
 
-  useEffect(() => {
-    dispatch(findAllBoards());
-  }, []);
+
 
   const boardList: [] = useSelector(getAllBoards);
+  const AArticle: IArticle = useSelector(getAArticleDetail);
 
-  console.log("boardList : " + boardList);
+  //console.log("AArticle : "+AArticle.title);
+
+  useEffect(() => {
+    dispatch(findAArticleById(props.params.id));
+    dispatch(findAllBoards());
+
+  }, []);
+
+  console.log("AArticle : "+JSON.stringify(AArticle));
+
 
   const onSubmit = (data: any) => {
-    alert("JSON data : "+JSON.stringify(data));
+    alert("JSON data : " + JSON.stringify(data));
     dispatch(save(data))
       .then((res: any) => {
-        alert('글쓰기 성공')
+        alert("글쓰기 성공");
         //console.log("res.payload.boardId"+JSON.stringify(res));
-        router.push(`/pages/board/detail/${data.boardId}`)
+        router.push(`/pages/board/detail/${data.boardId}`);
       })
       .catch((err: any) => {
-        console.log(err)
-        alert('error')
-        router.push(`/pages/board/detail/${data.boardId}`)
-
+        console.log(err);
+        alert("error");
+        router.push(`/pages/board/detail/${data.boardId}`);
       });
   };
 
@@ -78,6 +95,7 @@ const WritePage: NextPage = () => {
             </option>
           ))}
         </select>
+
         <div className="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl">
           {MyTypography("Article 작성", "1.5rem")}
           <input
@@ -90,11 +108,13 @@ const WritePage: NextPage = () => {
             className="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none"
             placeholder="Title"
             type="text"
+            //defaultValue={AArticle.title}
             {...register("title", { required: true })}
           />
           <textarea
             className="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none"
             placeholder="Describe everything about this post here"
+            defaultValue={props.params}
             {...register("content", { required: true, maxLength: 300 })}
           ></textarea>
           {/* <!-- icons --> */}
@@ -140,13 +160,11 @@ const WritePage: NextPage = () => {
             >
               Cancel
             </div>
-            {/* <div
-              className="btn  overflow-hidden relative w-30 bg-blue-500 text-white p-3 px-8 rounded-xl font-bold uppercase -- before:block before:absolute before:h-full before:w-1/2 before:rounded-full
-        before:bg-pink-400 before:top-0 before:left-1/4 before:transition-transform before:opacity-0 before:hover:opacity-100 hover:text-200 hover:before:animate-ping transition-all duration-00"
-            >
-              {" "}
-              Post{" "}
-            </div> */}
+            <input
+              type="hidden"
+              value={props.params.id}
+              {...register("id", { required: true })}
+            />
           </div>
         </div>
       </form>
